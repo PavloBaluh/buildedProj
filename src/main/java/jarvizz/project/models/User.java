@@ -13,15 +13,17 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @Entity
 public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String username;
     private String password;
+    private String email;
     @Enumerated(EnumType.STRING)
     private Roles roles = Roles.ROLE_USER;
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Food> basket;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -51,5 +53,11 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 }

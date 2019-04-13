@@ -50,15 +50,12 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
             HttpServletRequest req,
             HttpServletResponse res, FilterChain chain,
             Authentication auth) throws IOException, ServletException {
-        System.out.println("!!!!!!!!!!!");
-
         String jwtoken = Jwts.builder()
                 .setSubject(auth.getName())
                 .signWith(SignatureAlgorithm.HS512, "yes".getBytes())
 //                .setExpiration(new Date(System.currentTimeMillis() + 200000))
                 .compact();
         res.addHeader("Authorization", "Bearer " + jwtoken);
-        System.out.println(jwtoken);
 
     }
 }
