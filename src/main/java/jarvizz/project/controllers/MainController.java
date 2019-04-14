@@ -47,14 +47,19 @@ public class MainController {
 
 
     @PostMapping("/register")
-    public void register(@RequestHeader("username") String name,
-                         @RequestHeader("password") String pass,
-                         @RequestHeader("email") String mail) throws ClassCastException, MessagingException, IOException {
-        User user = new User(name,pass,mail);
-        Path path = Paths.get(System.getProperty("user.dir") + File.separator + "icons" +  File.separator + "logo.png");
-        MultipartFile file = new MockMultipartFile("logo.png",
-                "logo.png",  "text/plain", Files.readAllBytes(path));
-        mailService.send(mail,file,user.getUsername());
-        userService.save(user);
+    public String register(@RequestHeader("username") String name,
+                           @RequestHeader("password") String pass,
+                           @RequestHeader("email") String mail) throws MessagingException, IOException {
+        String good = "На вашу поштову адресу був відправлений лист з підтвердженням";
+        String bad = "Користувач з такою поштовою адресю або логіном уже зареєстрований";
+        User user = new User(name, passwordEncoder.encode(pass), mail);
+        System.out.println(user);
+        if (userService.findByEmail(mail) == null && userService.findByName(name) == null) {
+            userService.save(user);
+            mailService.send(mail, userService.findByEmail(mail));
+            return good;
+        }
+        return bad;
     }
+
 }
