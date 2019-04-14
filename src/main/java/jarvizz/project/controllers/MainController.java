@@ -8,13 +8,21 @@ import jarvizz.project.sevices.UserService;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
+import javax.mail.MessagingException;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -41,9 +49,12 @@ public class MainController {
     @PostMapping("/register")
     public void register(@RequestHeader("username") String name,
                          @RequestHeader("password") String pass,
-                         @RequestHeader("email") String mail) {
+                         @RequestHeader("email") String mail) throws ClassCastException, MessagingException, IOException {
         User user = new User(name,pass,mail);
-        mailService.send(mail);
+        Path path = Paths.get(System.getProperty("user.dir") + File.separator + "icons" +  File.separator + "logo.png");
+        MultipartFile file = new MockMultipartFile("logo.png",
+                "logo.png",  "text/plain", Files.readAllBytes(path));
+        mailService.send(mail,file,user.getUsername());
         userService.save(user);
     }
 }
