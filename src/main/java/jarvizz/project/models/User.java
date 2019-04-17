@@ -1,7 +1,7 @@
 package jarvizz.project.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +12,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@EqualsAndHashCode
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString(exclude = "basket")
 @Entity
 public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +26,9 @@ public class User implements UserDetails {
     private String email;
     @Enumerated(EnumType.STRING)
     private Roles roles = Roles.ROLE_USER;
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<Food> basket;
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
+    private List<Food> basket = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -60,4 +65,5 @@ public class User implements UserDetails {
         this.password = password;
         this.email = email;
     }
+
 }

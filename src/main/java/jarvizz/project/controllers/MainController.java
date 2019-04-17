@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -60,6 +61,14 @@ public class MainController {
             return good;
         }
         return bad;
+    }
+    @GetMapping("/basket")
+    public List<Food> basket (){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        User user =userService.findByName(name);
+        List<Food> basket = user.getBasket();
+        return basket;
     }
 
 }
