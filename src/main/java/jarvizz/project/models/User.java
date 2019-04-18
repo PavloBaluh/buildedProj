@@ -29,6 +29,8 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
     private List<Food> basket = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private UserInfo userInfo;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
