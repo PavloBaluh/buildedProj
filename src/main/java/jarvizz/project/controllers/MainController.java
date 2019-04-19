@@ -3,9 +3,7 @@ package jarvizz.project.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import jarvizz.project.models.*;
-import jarvizz.project.sevices.FoodService;
-import jarvizz.project.sevices.MailService;
-import jarvizz.project.sevices.UserService;
+import jarvizz.project.sevices.*;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
@@ -35,6 +33,8 @@ public class MainController {
     FoodService foodService;
     PasswordEncoder passwordEncoder;
     MailService mailService;
+    UserInfoService userInfoService;
+    CardInfoService cardInfoService;
 //    @GetMapping("/")
 //    public String home (){
 ////        String property = System.getProperty("user.dir") + File.separator + "icons" +  File.separator + "pizza.jpg";
@@ -76,13 +76,12 @@ public class MainController {
     @PostMapping("/updateUserInfo")
     public void updateUserInfo (HttpServletRequest request) throws IOException {
        UserInfo userInfo =  new ObjectMapper().readValue(request.getInputStream(), UserInfo.class);
-        System.out.println(userInfo);
-
+       userInfo.getCardInfo().setUserInfo(userInfo);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
         User user =userService.findByName(name);
-        user.setUserInfo(userInfo);
-        userService.save(user);
+        userInfo.setUser(user);
+        userInfoService.save(userInfo);
     }
 
 }

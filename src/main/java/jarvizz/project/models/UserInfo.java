@@ -24,12 +24,12 @@ public class UserInfo {
         this.cardInfo = new CardInfo(cardNumber,cvv,date);
     }
 
-    public UserInfo(String name, String surname, String phoneNumber, String address, User user,String cardNumber, String cvv, String date) {
-        this.name = name;
-        this.surname = surname;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.user = user;
-        this.cardInfo = new CardInfo(cardNumber,cvv,date);
-    }
+//    public UserInfo(String name, String surname, String phoneNumber, String address, User user,String cardNumber, String cvv, String date) {
+//        this.name = name;
+//        this.surname = surname;
+//        this.phoneNumber = phoneNumber;
+//        this.address = address;
+//        this.user = user;
+//        this.cardInfo = new CardInfo(cardNumber,cvv,date);
+//    }
 }
