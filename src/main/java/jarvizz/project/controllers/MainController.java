@@ -1,5 +1,6 @@
 package jarvizz.project.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import jarvizz.project.models.*;
 import jarvizz.project.sevices.FoodService;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -69,6 +71,18 @@ public class MainController {
         User user =userService.findByName(name);
         List<Food> basket = user.getBasket();
         return basket;
+    }
+
+    @PostMapping("/updateUserInfo")
+    public void updateUserInfo (HttpServletRequest request) throws IOException {
+       UserInfo userInfo =  new ObjectMapper().readValue(request.getInputStream(), UserInfo.class);
+        System.out.println(userInfo);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        User user =userService.findByName(name);
+        user.setUserInfo(userInfo);
+        userService.save(user);
     }
 
 }
