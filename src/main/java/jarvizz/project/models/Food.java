@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,6 +25,6 @@ public class Food {
     private String description;
     private String picture;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY )
-    private User user;
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY )
+    private List<User> user = new ArrayList<>();
 }

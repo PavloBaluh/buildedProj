@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,15 +36,17 @@ public class RestaurantController {
     }
 
     @PostMapping("/addFood")
-    public void add(@RequestHeader("item") String item) {
-        System.out.println(item);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String name = authentication.getName();
-        User user =userService.findByName(name);
-        Food food = foodService.findById(Integer.parseInt(item));
-        String description = food.getDescription();
-        System.out.println(description);
-        food.setUser(user);
-        foodService.save(food);
+    public void add(@RequestHeader("item") String item,
+                    @RequestHeader("quantity") String quantity) {
+        for (int i = 0; i <= Integer.parseInt(quantity); i++) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String name = authentication.getName();
+            User user = userService.findByName(name);
+            Food food = foodService.findById(Integer.parseInt(item));
+            List<User> users = food.getUser();
+            users.add(user);
+            food.setUser(users);
+            foodService.save(food);
+        }
     }
 }
