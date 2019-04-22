@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -38,7 +39,7 @@ public class RestaurantController {
     @PostMapping("/addFood")
     public void add(@RequestHeader("item") String item,
                     @RequestHeader("quantity") String quantity) {
-        for (int i = 0; i <= Integer.parseInt(quantity); i++) {
+        for (int i = 1; i <= Integer.parseInt(quantity); i++) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
             User user = userService.findByName(name);
@@ -49,4 +50,15 @@ public class RestaurantController {
             foodService.save(food);
         }
     }
+    @DeleteMapping("/deleteFood")
+    public void delete(@RequestHeader("item") String item){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        User user = userService.findByName(name);
+        List<Food> basket = user.getBasket();
+        basket.removeIf(food -> food.equals(foodService.findById(Integer.parseInt(item))));
+        user.setBasket(basket);
+    }
+
+
 }

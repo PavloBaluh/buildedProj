@@ -33,4 +33,8 @@ public class FoodService {
     public Food findById(int id){
         return foodDao.findById(id);
     }
+
+    public void  deleteByid(int id){
+         foodDao.deleteById(id);
+    }
 }
