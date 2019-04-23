@@ -55,9 +55,11 @@ public class RestaurantController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
         User user = userService.findByName(name);
-        List<Food> basket = user.getBasket();
-        basket.removeIf(food -> food.equals(foodService.findById(Integer.parseInt(item))));
-        user.setBasket(basket);
+        Food food = foodService.findById(Integer.parseInt(item));
+        List<User> user1 = food.getUser();
+        user1.removeIf((usr) -> usr.equals(user));
+        food.setUser(user1);
+        foodService.save(food);
     }
 
 
