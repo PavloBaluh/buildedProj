@@ -1,5 +1,6 @@
 package jarvizz.project.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ public class CardInfo {
     private String cardNumber;
     private String CVV;
     private String date;
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private UserInfo userInfo;
 

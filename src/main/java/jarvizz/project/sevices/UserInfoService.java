@@ -13,4 +13,7 @@ public class UserInfoService {
     public void save(UserInfo userInfo){
         userInfoDao.save(userInfo);
     }
+    public UserInfo get(Integer id){
+        return userInfoDao.getOne(id);
+    }
 }

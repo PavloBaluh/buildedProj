@@ -1,29 +1,17 @@
 package jarvizz.project.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import jarvizz.project.models.*;
 import jarvizz.project.sevices.*;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import lombok.AllArgsConstructor;
-import org.json.JSONObject;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -65,24 +53,42 @@ public class MainController {
         }
         return bad;
     }
+
     @GetMapping("/basket")
-    public List<Food> basket (){
+    public List<Food> basket() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
-        User user =userService.findByName(name);
+        User user = userService.findByName(name);
         List<Food> basket = user.getBasket();
         return basket;
     }
 
     @PostMapping("/updateUserInfo")
-    public void updateUserInfo (HttpServletRequest request) throws IOException {
-       UserInfo userInfo =  new ObjectMapper().readValue(request.getInputStream(), UserInfo.class);
-       userInfo.getCardInfo().setUserInfo(userInfo);
+    public void updateUserInfo(HttpServletRequest request) throws IOException {
+        UserInfo userInfo = new ObjectMapper().readValue(request.getInputStream(), UserInfo.class);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
-        User user =userService.findByName(name);
-        userInfo.setUser(user);
-        userInfoService.save(userInfo);
+        User user = userService.findByName(name);
+        if (user.getUserInfo() != null) {
+            UserInfo userInfo1 = userInfoService.get(user.getUserInfo().getId());
+            userInfo1.setAddress(userInfo.getAddress());
+            userInfo1.setName(userInfo.getName());
+            userInfo1.setPhoneNumber(userInfo.getPhoneNumber());
+            userInfo1.setSurname(userInfo.getSurname());
+            userInfoService.save(userInfo1);
+        } else {
+            userInfo.setUser(user);
+            userInfoService.save(userInfo);
+            user.setUserInfo(userInfo);
+            userService.save(user);
+        }
     }
 
+    @GetMapping("/getUserInfo")
+    public UserInfo getUserInfo(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        User user = userService.findByName(name);
+        return user.getUserInfo();
+    }
 }

@@ -29,6 +29,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
     private List<Food> basket = new ArrayList<>();
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
     private UserInfo userInfo;
 
