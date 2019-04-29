@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/register", "/", "/register/confirm/**","/restaurant/product-category/**","/restaurant").permitAll()
-                .antMatchers(HttpMethod.POST, "/login", "addFood").permitAll()
+                .antMatchers(HttpMethod.POST, "/login", "addFood","/makeOrder").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new RequestProcessingJWTFilter(), UsernamePasswordAuthenticationFilter.class)

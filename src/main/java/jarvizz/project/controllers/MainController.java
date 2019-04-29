@@ -24,6 +24,7 @@ public class MainController {
     MailService mailService;
     UserInfoService userInfoService;
     CardInfoService cardInfoService;
+    OrderService orderService;
 //    @GetMapping("/")
 //    public String home (){
 ////        String property = System.getProperty("user.dir") + File.separator + "icons" +  File.separator + "pizza.jpg";
@@ -90,5 +91,11 @@ public class MainController {
         String name = authentication.getName();
         User user = userService.findByName(name);
         return user.getUserInfo();
+    }
+    @PostMapping("/makeOrder")
+    public String makeOrder (HttpServletRequest request) throws IOException {
+        Orders userInfo = new ObjectMapper().readValue(request.getInputStream(),Orders.class);
+        orderService.save(userInfo);
+        return "";
     }
 }
