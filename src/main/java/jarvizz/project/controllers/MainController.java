@@ -1,6 +1,11 @@
 package jarvizz.project.controllers;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import jarvizz.project.models.*;
 import jarvizz.project.sevices.*;
 import lombok.AllArgsConstructor;
@@ -12,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -92,10 +99,21 @@ public class MainController {
         User user = userService.findByName(name);
         return user.getUserInfo();
     }
+
     @PostMapping("/makeOrder")
-    public String makeOrder (HttpServletRequest request) throws IOException {
-        Orders userInfo = new ObjectMapper().readValue(request.getInputStream(),Orders.class);
-        orderService.save(userInfo);
+    public String makeOrder (HttpServletRequest request, @RequestHeader("foods") String foodInp) throws IOException {
+        List<Food> foods = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        List<Food> list = objectMapper.readValue(foodInp, TypeFactory.defaultInstance().constructCollectionType(List.class, Food.class));
+        Orders orders = objectMapper.readValue(request.getInputStream(),Orders.class);
+        System.out.println(orders.getName());
+        for (Food food : list) {
+            Food byName = foodService.findByName(food.getName());
+            byName.setOrder(orders);
+            foods.add(byName);
+        }
+        orders.setFoods(foods);
+        orderService.save(orders);
         return "";
     }
 }

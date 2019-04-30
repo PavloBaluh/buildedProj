@@ -14,4 +14,5 @@ public interface FoodDao extends JpaRepository<Food, Integer> {
     Food findById(int id);
     List<Food> findAll();
     void deleteById(Integer integer);
+    Food findByName(String name);
 }
