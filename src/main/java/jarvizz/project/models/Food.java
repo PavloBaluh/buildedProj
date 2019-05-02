@@ -2,6 +2,7 @@ package jarvizz.project.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,11 +19,13 @@ public class Food implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Nationalized
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type;
     private float weight;
     private float price;
+    @Nationalized
     private String description;
     private String picture;
     @JsonIgnore
@@ -40,6 +43,15 @@ public class Food implements Serializable {
         this.description = description;
         this.picture = picture;
         this.user = user;
+    }
+
+    public Food(String name, Type type, float weight, float price, String description, String picture) {
+        this.name = name;
+        this.type = type;
+        this.weight = weight;
+        this.price = price;
+        this.description = description;
+        this.picture = picture;
     }
 }
 

@@ -3,6 +3,7 @@ package jarvizz.project.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
 
@@ -12,9 +13,12 @@ public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Nationalized
     private String name;
+    @Nationalized
     private String surname;
     private String phoneNumber;
+    @Nationalized
     private String address;
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

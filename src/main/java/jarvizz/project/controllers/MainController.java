@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -100,11 +102,16 @@ public class MainController {
         return user.getUserInfo();
     }
 
-    @PostMapping("/makeOrder")
-    public String makeOrder (HttpServletRequest request, @RequestHeader("foods") String foodInp) throws IOException {
+    @PostMapping("/makeOrder/basket/{foods}")
+    public String makeOrder(HttpServletRequest request,  @PathVariable("foods") String foodInp) throws IOException {
+        String[] split = foodInp.split(",");
         List<Food> foods = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        List<Food> list = objectMapper.readValue(foodInp, TypeFactory.defaultInstance().constructCollectionType(List.class, Food.class));
+//        List<Food> list = objectMapper.readValue(foodInp, TypeFactory.defaultInstance().constructCollectionType(List.class, Food.class));
+        List<Food> list = new ArrayList<>();
+        for (String s : split) {
+            list.add(foodService.findByName(s));
+        }
         Orders orders = objectMapper.readValue(request.getInputStream(),Orders.class);
         System.out.println(orders.getName());
         for (Food food : list) {
@@ -116,4 +123,5 @@ public class MainController {
         orderService.save(orders);
         return "";
     }
+
 }

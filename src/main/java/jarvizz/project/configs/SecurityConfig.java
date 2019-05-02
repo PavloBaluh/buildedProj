@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/register", "/", "/register/confirm/**","/restaurant/product-category/**","/restaurant").permitAll()
-                .antMatchers(HttpMethod.POST, "/login", "addFood","/makeOrder").permitAll()
+                .antMatchers(HttpMethod.POST, "/login", "addFood","/makeOrder/basket/{foods}").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new RequestProcessingJWTFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
         configuration.addAllowedHeader("*");
-        configuration.setAllowedMethods(Arrays.asList(HttpMethod.POST.name(), HttpMethod.GET.name(),HttpMethod.DELETE.name()));
+        configuration.addAllowedOrigin("http://localhost:4200");
+        configuration.setAllowedMethods(Arrays.asList(HttpMethod.POST.name(), HttpMethod.GET.name(),HttpMethod.DELETE.name(),HttpMethod.OPTIONS.name()));
         configuration.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
