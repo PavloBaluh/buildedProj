@@ -17,22 +17,21 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = "basket")
+@ToString(exclude = {"basket","userInfo","orders"})
 @Entity
 public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Nationalized
     private String username;
-    @Nationalized
     private String password;
     private String email;
     @Enumerated(EnumType.STRING)
     private Roles roles = Roles.ROLE_USER;
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
+    private List<Orders> orders = new ArrayList<>();
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
     private List<Food> basket = new ArrayList<>();
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
     private UserInfo userInfo;
 

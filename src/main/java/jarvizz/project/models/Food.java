@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString(exclude = {"user","order"})
+@ToString(exclude = {"user","orders"})
 @Getter
 @Setter
 public class Food implements Serializable {
@@ -32,8 +32,8 @@ public class Food implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY )
     private List<User> user = new ArrayList<>();
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private Orders order;
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Orders> orders = new ArrayList<>();
 
     public Food(String name, Type type, float weight, float price, String description, String picture, List<User> user) {
         this.name = name;

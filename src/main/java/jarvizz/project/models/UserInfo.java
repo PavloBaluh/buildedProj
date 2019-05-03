@@ -3,12 +3,14 @@ package jarvizz.project.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@ToString(exclude = {"user","cardInfo"})
 public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +25,6 @@ public class UserInfo {
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "userInfo")
     private CardInfo cardInfo;
 

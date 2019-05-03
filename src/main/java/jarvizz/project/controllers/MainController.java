@@ -68,13 +68,14 @@ public class MainController {
     public List<Food> basket() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
+        System.out.println(name);
         User user = userService.findByName(name);
-        List<Food> basket = user.getBasket();
-        return basket;
+        return user.getBasket();
     }
 
     @PostMapping("/updateUserInfo")
     public void updateUserInfo(HttpServletRequest request) throws IOException {
+        System.out.println(request.getInputStream());
         UserInfo userInfo = new ObjectMapper().readValue(request.getInputStream(), UserInfo.class);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
@@ -95,7 +96,7 @@ public class MainController {
     }
 
     @GetMapping("/getUserInfo")
-    public UserInfo getUserInfo(){
+    public UserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
         User user = userService.findByName(name);
@@ -103,7 +104,7 @@ public class MainController {
     }
 
     @PostMapping("/makeOrder/basket/{foods}")
-    public String makeOrder(HttpServletRequest request,  @PathVariable("foods") String foodInp) throws IOException {
+    public String makeOrder(HttpServletRequest request, @PathVariable("foods") String foodInp) throws IOException {
         String[] split = foodInp.split(",");
         List<Food> foods = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -112,15 +113,40 @@ public class MainController {
         for (String s : split) {
             list.add(foodService.findByName(s));
         }
-        Orders orders = objectMapper.readValue(request.getInputStream(),Orders.class);
-        System.out.println(orders.getName());
+        Orders orders = objectMapper.readValue(request.getInputStream(), Orders.class);
         for (Food food : list) {
             Food byName = foodService.findByName(food.getName());
-            byName.setOrder(orders);
+            List<Orders> orders1 = byName.getOrders();
+            orders1.add(orders);
+            byName.setOrders(orders1);
             foods.add(byName);
         }
-        orders.setFoods(foods);
-        orderService.save(orders);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication!=null && !authentication.getName().equals("anonymousUser")){
+            String name = authentication.getName();
+            System.out.println(name);
+            User byName = userService.findByName(name);
+            System.out.println(byName);
+            orders.setUser(byName);
+
+            try {
+                List<Orders> orders1 = byName.getOrders();
+                orders1.add(orders);
+                byName.setOrders(orders1);
+            }
+            catch (NullPointerException e){
+                List<Orders> orders1 = new ArrayList<>();
+                orders1.add(orders);
+                byName.setOrders(orders1);
+            }
+            orders.setFoods(foods);
+            orderService.save(orders);
+            userService.save(byName);
+        }
+        else {
+            orders.setFoods(foods);
+            orderService.save(orders);
+        }
         return "";
     }
 
