@@ -32,7 +32,7 @@ public class Food implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY )
     private List<User> user = new ArrayList<>();
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToMany(cascade =  {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REMOVE,CascadeType.REFRESH,},fetch = FetchType.LAZY)
     private List<Orders> orders = new ArrayList<>();
 
     public Food(String name, Type type, float weight, float price, String description, String picture, List<User> user) {

@@ -15,9 +15,9 @@ public class CardInfo {
     private String cardNumber;
     private String CVV;
     private String date;
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private UserInfo userInfo;
+//    @JsonIgnore
+//    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+//    private UserInfo userInfo;
 
     public CardInfo(String cardNumber, String CVV, String date) {
         this.cardNumber = cardNumber;

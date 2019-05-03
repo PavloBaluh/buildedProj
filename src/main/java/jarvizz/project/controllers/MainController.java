@@ -114,6 +114,8 @@ public class MainController {
             list.add(foodService.findByName(s));
         }
         Orders orders = objectMapper.readValue(request.getInputStream(), Orders.class);
+        orders.setId(0);
+        System.out.println(orders);
         for (Food food : list) {
             Food byName = foodService.findByName(food.getName());
             List<Orders> orders1 = byName.getOrders();
@@ -145,6 +147,14 @@ public class MainController {
             if (byName.getUserInfo() == null){
                 UserInfo userInfo = new UserInfo(orders.getName(),orders.getSurname(),orders.getPhoneNumber(),orders.getAddress(),orders.getBonus());
                 userInfo.setUser(byName);
+                userInfoService.save(userInfo);
+                byName.setUserInfo(userInfo);
+                userService.save(byName);
+            }
+            else {
+              UserInfo userInfo =  byName.getUserInfo();
+                double bonus = userInfo.getBonus() + orders.getBonus();
+                userInfo.setBonus(bonus);
                 userInfoService.save(userInfo);
                 byName.setUserInfo(userInfo);
                 userService.save(byName);

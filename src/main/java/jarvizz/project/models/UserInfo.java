@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@ToString(exclude = {"user","cardInfo"})
+@ToString(exclude = {"user"})
 public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +26,7 @@ public class UserInfo {
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "userInfo")
-    private CardInfo cardInfo;
 
-    public UserInfo(String cardNumber, String cvv, String date) {
-        this.cardInfo = new CardInfo(cardNumber,cvv,date);
-    }
 
     public UserInfo(String name, String surname, String phoneNumber, String address, double bonus) {
         this.name = name;

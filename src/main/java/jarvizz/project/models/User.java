@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
     private List<Food> basket = new ArrayList<>();
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY,cascade =  {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REMOVE,CascadeType.REFRESH,},mappedBy = "user")
     private UserInfo userInfo;
 
     @Override
