@@ -142,6 +142,15 @@ public class MainController {
             orders.setFoods(foods);
             orderService.save(orders);
             userService.save(byName);
+            if (byName.getUserInfo() == null){
+                UserInfo userInfo = new UserInfo(orders.getName(),orders.getSurname(),orders.getPhoneNumber(),orders.getAddress(),orders.getBonus());
+                userInfo.setUser(byName);
+                userInfoService.save(userInfo);
+                byName.setUserInfo(userInfo);
+                userService.save(byName);
+            }
+
+
         }
         else {
             orders.setFoods(foods);
@@ -149,5 +158,4 @@ public class MainController {
         }
         return "";
     }
-
 }

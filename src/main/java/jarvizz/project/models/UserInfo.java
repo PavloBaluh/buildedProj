@@ -22,6 +22,7 @@ public class UserInfo {
     private String phoneNumber;
     @Nationalized
     private String address;
+    private double bonus = 0.0;
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
@@ -32,10 +33,11 @@ public class UserInfo {
         this.cardInfo = new CardInfo(cardNumber,cvv,date);
     }
 
-    public UserInfo(String name, String surname, String phoneNumber, String address) {
+    public UserInfo(String name, String surname, String phoneNumber, String address, double bonus) {
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.bonus = bonus;
     }
 }
