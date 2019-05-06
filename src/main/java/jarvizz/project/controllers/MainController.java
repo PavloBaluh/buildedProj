@@ -124,7 +124,7 @@ public class MainController {
             foods.add(byName);
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication!=null && !authentication.getName().equals("anonymousUser")){
+        if (authentication != null && !authentication.getName().equals("anonymousUser")) {
             String name = authentication.getName();
             System.out.println(name);
             User byName = userService.findByName(name);
@@ -135,8 +135,7 @@ public class MainController {
                 List<Orders> orders1 = byName.getOrders();
                 orders1.add(orders);
                 byName.setOrders(orders1);
-            }
-            catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 List<Orders> orders1 = new ArrayList<>();
                 orders1.add(orders);
                 byName.setOrders(orders1);
@@ -144,15 +143,14 @@ public class MainController {
             orders.setFoods(foods);
             orderService.save(orders);
             userService.save(byName);
-            if (byName.getUserInfo() == null){
-                UserInfo userInfo = new UserInfo(orders.getName(),orders.getSurname(),orders.getPhoneNumber(),orders.getAddress(),orders.getBonus());
+            if (byName.getUserInfo() == null) {
+                UserInfo userInfo = new UserInfo(orders.getName(), orders.getSurname(), orders.getPhoneNumber(), orders.getAddress(), orders.getBonus());
                 userInfo.setUser(byName);
                 userInfoService.save(userInfo);
                 byName.setUserInfo(userInfo);
                 userService.save(byName);
-            }
-            else {
-              UserInfo userInfo =  byName.getUserInfo();
+            } else {
+                UserInfo userInfo = byName.getUserInfo();
                 double bonus = userInfo.getBonus() + orders.getBonus();
                 userInfo.setBonus(bonus);
                 userInfoService.save(userInfo);
@@ -161,11 +159,19 @@ public class MainController {
             }
 
 
-        }
-        else {
+        } else {
             orders.setFoods(foods);
             orderService.save(orders);
         }
         return "";
+    }
+
+    @GetMapping("/history")
+    public List<Orders> history() {
+        String authentication = SecurityContextHolder.getContext().getAuthentication().getName();
+        User byName = userService.findByName(authentication);
+        System.out.println(byName);
+        System.out.println(byName.getOrders());
+        return byName.getOrders();
     }
 }

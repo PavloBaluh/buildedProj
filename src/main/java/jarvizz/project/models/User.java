@@ -27,6 +27,7 @@ public class User implements UserDetails {
     private String email;
     @Enumerated(EnumType.STRING)
     private Roles roles = Roles.ROLE_USER;
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "user")
     private List<Orders> orders = new ArrayList<>();
     @JsonIgnore

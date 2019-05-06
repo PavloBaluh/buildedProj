@@ -1,7 +1,7 @@
 package jarvizz.project.models;
 
 public enum  Type {
-    PIZZA,BURGER,SALAD,SOUP,DRINKS,DESERT,
+    PIZZA,SUSHI,SALAD,SOUP,DRINKS,DESERT,
 
 //    public String toString(){proj
 //        switch(this){
