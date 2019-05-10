@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class StartUpController {
     UserService userService;
     @GetMapping("/")
-    public String home(){ return "forward:/index.html"; }
+    public String home(){
+        return "forward:/index.html";
+    }
 
 
     @GetMapping("/register/confirm/{name}")
