@@ -27,14 +27,12 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         super(new AntPathRequestMatcher(url));
         setAuthenticationManager(authManager);
     }
+
     private AccountCredentials creds;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
-        creds = new ObjectMapper()
-                .readValue(httpServletRequest.getInputStream(), AccountCredentials.class);
-        System.out.println(creds);
-        System.out.println("!!!!!!!!!!");
+        creds = new ObjectMapper().readValue(httpServletRequest.getInputStream(), AccountCredentials.class);
         return getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
                         creds.getUsername(),
@@ -47,6 +45,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     protected void successfulAuthentication(
+
             HttpServletRequest req,
             HttpServletResponse res, FilterChain chain,
             Authentication auth) throws IOException, ServletException {

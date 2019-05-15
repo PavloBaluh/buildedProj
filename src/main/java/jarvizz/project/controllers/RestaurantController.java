@@ -40,9 +40,7 @@ public class RestaurantController {
     public void add(@RequestHeader("item") String item,
                     @RequestHeader("quantity") String quantity) {
         for (int i = 1; i <= Integer.parseInt(quantity); i++) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String name = authentication.getName();
-            User user = userService.findByName(name);
+            User user = getAuth();
             Food food = foodService.findById(Integer.parseInt(item));
             List<User> users = food.getUser();
             users.add(user);
@@ -52,14 +50,19 @@ public class RestaurantController {
     }
     @DeleteMapping("/deleteFood")
     public void delete(@RequestHeader("item") String item){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String name = authentication.getName();
-        User user = userService.findByName(name);
+         User user = getAuth();
         Food food = foodService.findById(Integer.parseInt(item));
         List<User> user1 = food.getUser();
+
         user1.removeIf((usr) -> usr.equals(user));
         food.setUser(user1);
         foodService.save(food);
+    }
+
+    private User getAuth(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        return userService.findByName(name);
     }
 
 
